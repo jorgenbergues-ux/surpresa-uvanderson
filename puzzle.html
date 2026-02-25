@@ -1,1 +1,157 @@
-Criar página do quebra-cabeça
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quebra-cabeça para Uvanderson</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #puzzle-container {
+      margin: 20px auto;
+      max-width: 400px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      user-select: none;
+    }
+    .piece {
+      background-size: 300px 300px;
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      border-radius: 10px;
+      box-shadow: 0 0 5px #555;
+      transition: transform 0.3s ease;
+    }
+    .piece.correct {
+      cursor: default;
+      box-shadow: 0 0 10px gold;
+      border: 2px solid gold;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1.2em;
+      min-height: 30px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 30px;
+      font-size: 1em;
+      border-radius: 25px;
+      border: none;
+      background-color: #e8c4b7;
+      color: #222;
+      cursor: pointer;
+      box-shadow: 0 0 10px #e8c4b7;
+      display: none;
+    }
+    button:hover {
+      background-color: #d1998a;
+    }
+  </style>
+</head>
+<body>
+  <h1>Monte o quebra-cabeça</h1>
+  <div id="puzzle-container"></div>
+  <div id="message"></div>
+  <button id="continue-btn" onclick="goToSurprise()">Continue</button>
+
+  <script>
+    const rows = 3;
+    const cols = 3;
+    const puzzleContainer = document.getElementById('puzzle-container');
+    const message = document.getElementById('message');
+    const continueBtn = document.getElementById('continue-btn');
+
+    // Imagem que será o quebra-cabeça - você vai precisar substituir a URL pela sua foto especial!
+    const imageUrl = 'https://i.imgur.com/w8P3PZR.jpg';
+
+    let pieces = [];
+    let correctOrder = [];
+
+    function shuffle(array) {
+      for (let i = array.length -1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i +1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function createPieces() {
+      for(let i=0; i < rows * cols; i++) {
+        const piece = document.createElement('div');
+        piece.classList.add('piece');
+        piece.style.backgroundImage = `url(${imageUrl})`;
+        const x = (i % cols) * (300 / (cols - 1));
+        const y = Math.floor(i / cols) * (300 / (rows - 1));
+        piece.style.backgroundPosition = `-${x}px -${y}px`;
+        piece.dataset.correctIndex = i;
+        pieces.push(piece);
+        correctOrder.push(i);
+      }
+    }
+
+    function renderPieces() {
+      shuffle(pieces);
+      pieces.forEach(piece => {
+        puzzleContainer.appendChild(piece);
+        piece.addEventListener('click', () => selectPiece(piece));
+      });
+    }
+
+    let firstSelected = null;
+
+    function selectPiece(piece) {
+      if (piece.classList.contains('correct')) return;
+
+      if (!firstSelected) {
+        firstSelected = piece;
+        piece.style.transform = 'scale(1.1)';
+      } else if (firstSelected === piece) {
+        piece.style.transform = 'scale(1)';
+        firstSelected = null;
+      } else {
+        // Troca as posições
+        const firstIndex = Array.from(puzzleContainer.children).indexOf(firstSelected);
+        const secondIndex = Array.from(puzzleContainer.children).indexOf(piece);
+        puzzleContainer.insertBefore(firstSelected, puzzleContainer.children[secondIndex]);
+        puzzleContainer.insertBefore(piece, puzzleContainer.children[firstIndex]);
+
+        firstSelected.style.transform = 'scale(1)';
+        checkCorrect();
+        firstSelected = null;
+      }
+    }
+
+    function checkCorrect() {
+      let correctCount = 0;
+      pieces.forEach((piece, index) => {
+        if (parseInt(piece.dataset.correctIndex) === index) {
+          piece.classList.add('correct');
+          piece.style.cursor = 'default';
+          correctCount++;
+        } else {
+          piece.classList.remove('correct');
+          piece.style.cursor = 'pointer';
+        }
+      });
+      if (correctCount === pieces.length) {
+        message.textContent = 'Você juntou todas as peças!';
+        continueBtn.style.display = 'inline-block';
+      }
+    }
+
+    function goToSurprise() {
+      window.location.href = 'surpresa.html';
+    }
+
+    createPieces();
+    renderPieces();
+  </script>
+</body>
+</html>
