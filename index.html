@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Surpresa para Uvanderson</title>
+  <style>
+    body {
+      margin: 0; 
+      height: 100vh; 
+      background: radial-gradient(circle at center, #0a0a23, #000010);
+      color: white; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex; 
+      flex-direction: column;
+      justify-content: center; 
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: transparent url('https://i.imgur.com/9QRG3cQ.png') repeat;
+      animation: starmove 60s linear infinite;
+      z-index: 0;
+    }
+    @keyframes starmove {
+      0% { background-position: 0 0; }
+      100% { background-position: -10000px 0; }
+    }
+    h1 {
+      font-size: 2.5em;
+      margin: 0 0 20px;
+      z-index: 1;
+      text-shadow: 0 0 10px #e8c4b7;
+    }
+    p {
+      font-size: 1.2em;
+      margin: 0 0 40px;
+      max-width: 400px;
+      line-height: 1.5;
+      z-index: 1;
+      text-shadow: 0 0 5px #d1a38b;
+    }
+    button {
+      background-color: #e8c4b7;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 30px;
+      font-size: 1.3em;
+      cursor: pointer;
+      box-shadow: 0 0 15px #e8c4b7;
+      transition: background-color 0.3s ease;
+      z-index: 1;
+    }
+    button:hover {
+      background-color: #d1998a;
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <h1>Algumas histórias não são escritas por acaso...</h1>
+  <p>Algumas são destino.</p>
+  <button onclick="window.location.href='puzzle.html'">Descobrir nossa história</button>
+</body>
+</html>
